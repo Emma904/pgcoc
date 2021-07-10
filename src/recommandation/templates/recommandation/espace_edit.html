@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action = '.', method = 'POST'>{% csrf_token %}
+    <h2>Nom de l'espace</h2>
+    {{ nom_espace_form.as_p }}
+    <h2>Agenda</h2>
+    {{ agenda_form.as_p }}
+    <h2>Activités ponctuelles</h2>
+    {{ acts_ponct_form.as_p }}
+    <input type='submit' value='Enregistrer'>
+</form>
+{% endblock %}

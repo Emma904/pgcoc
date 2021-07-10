@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Votre espace: {{ esp.nom_espace }}</h1>
+<h2>Votre semaine type</h2>
+<p> Lundi matin: {{ ag.lundi_matin }}</p>
+<p> Lundi après-midi: {{ ag.lundi_aprem }}</p>
+<p> Mardi matin: {{ ag.mardi_matin }}</p>
+<p> Mardi après-midi: {{ ag.mardi_aprem }}</p>
+<p> Mercredi matin: {{ ag.mercredi_matin }}</p>
+<p> Mercredi après-midi: {{ ag.mercredi_aprem }}</p>
+<p> Jeudi matin: {{ ag.jeudi_matin }}</p>
+<p> Jeudi après-midi: {{ ag.jeudi_aprem }}</p>
+<p> Vendredi matin: {{ ag.vendredi_matin }}</p>
+<p> Vendredi après-midi: {{ ag.vendredi_aprem }}</p>
+<h2>Vos activités ponctuelles:</h2>
+<p>{{ esp.acts_ponct }}</p>
+<h2>Vos outils utilisés</h2>
+<p>{{ esp.outils_utilisés }}</p>
+<h2>Vos outils recommandés</h2>
+<p>{{ esp.outils_recommandés }}</p>
+{% endblock %}

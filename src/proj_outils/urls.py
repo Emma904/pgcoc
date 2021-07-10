@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from recommandation import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('espace/<int:id_esp>/', views.espace_detail_view),
+    path('create/', views.espace_create_view),
+    path('edit_espace/<int:id_esp>/', views.espace_edit_view)
 ]
