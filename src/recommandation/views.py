@@ -1,7 +1,33 @@
 from django.shortcuts import get_object_or_404, render
-from .models import Espace, Agenda
+from django.contrib.auth import authenticate, login
+from .models import Espace, Agenda, Utilisateur
 from .forms import ActsPonctForm, NomEspaceForm, AgendaForm
 # Create your views here.
+
+def accueil_uti_view(request, id):
+    utilisateur = Utilisateur.objects.get(id=id)
+    if utilisateur.ids_espaces is not None:
+        espaces = Espace.objects.filter(id_espace__in = utilisateur.ids_espaces)
+        agendas = Agenda.objects.filter(id_espace__in = utilisateur.ids_espaces)
+    else:
+        espaces = None
+        agendas = None
+
+    context = { 'uti': utilisateur, 'esps': espaces,  'ags': agendas }
+    return render(request, 'recommandation/utilisateur_accueil.html', context)
+
+def login_view(request):
+
+    if request.method == 'POST':
+            id = request.POST.get('id')
+            utilisateur = authenticate(request, id=id)
+        
+            if utilisateur is not None:
+                login(request, id)
+
+    context = {}
+    return render(request, 'login.html', context)
+
 
 def espace_edit_view(request, id_esp):
 
@@ -54,8 +80,8 @@ def espace_edit_view(request, id_esp):
 
 
 
-def espace_create_view(request):
-
+def espace_create_view(request, id):
+    
     if request.method == 'POST':
         nom_espace_form = NomEspaceForm(request.POST)
         if nom_espace_form.is_valid():
@@ -79,6 +105,9 @@ def espace_create_view(request):
                 vendredi_matin=vendredi_matin, vendredi_aprem=vendredi_aprem)
                 e.save()
                 a.save()
+                uti = Utilisateur.objects.get(id=id)
+                uti.ids_espaces.append(e.id_espace)
+                uti.save()
 
                 instance_esp = get_object_or_404(Espace, id_espace = e.id_espace)
                 acts_ponct_form = ActsPonctForm(request.POST)

@@ -1,5 +1,7 @@
 from django import forms
 
+from recommandation.models import Utilisateur
+
 class NomEspaceForm(forms.Form):
     Nom_de_l_espace = forms.CharField(max_length=100)
 

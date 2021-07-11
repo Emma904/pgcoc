@@ -20,6 +20,9 @@ from recommandation import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('espace/<int:id_esp>/', views.espace_detail_view),
-    path('create/', views.espace_create_view),
-    path('edit_espace/<int:id_esp>/', views.espace_edit_view)
+    path('create/<str:id>/', views.espace_create_view),
+    path('edit_espace/<int:id_esp>/', views.espace_edit_view),
+    path('login/', views.login_view),
+    path('accueil/<int:id>/', views.accueil_uti_view),
+    
 ]

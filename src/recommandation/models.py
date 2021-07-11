@@ -63,9 +63,9 @@ class Outil(models.Model):
 
 
 class Utilisateur(models.Model):
-    id = models.TextField(primary_key=True)
-    admin_bool = models.IntegerField(blank=True, null=True)
-    ids_espaces = models.IntegerField(blank=True, null=True)
+    id = models.CharField(max_length=100, primary_key=True)
+    admin_bool = models.IntegerField(default=0, blank=True, null=True)
+    ids_espaces = models.JSONField(default=list, blank=True, null=True)
 
     class Meta:
         managed = False
