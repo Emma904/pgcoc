@@ -18,11 +18,12 @@ from django.urls import path
 from recommandation import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('espace/<int:id_esp>/', views.espace_detail_view),
-    path('create/<str:id>/', views.espace_create_view),
-    path('edit_espace/<int:id_esp>/', views.espace_edit_view),
-    path('login/', views.login_view),
-    path('accueil/<int:id>/', views.accueil_uti_view),
+    path('admin/', admin.site.urls, name='Admin'),
+    path('espace/<int:id_esp>/', views.espace_detail_view, name='Détail espace'),
+    path('create/<str:id>/', views.espace_create_view, name='Création espace'),
+    path('espace_edit/<int:id_esp>/', views.espace_edit_view, name='Modification espace'),
+    path('login/', views.login_view, name='Connexion'),
+    path('accueil/<int:id>/', views.accueil_uti_view, name='Accueil utilisateur'),
+    path('delete/<int:id_esp>/', views.espace_delete_view, name='Supprimer espace'),
     
 ]

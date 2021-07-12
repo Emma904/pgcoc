@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="POST" action="">
+    {% csrf_token %}
+        <input class="btn btn-default btn-danger" type="submit" value="Supprimer l'espace"/>
+</form>
+{% endblock %}

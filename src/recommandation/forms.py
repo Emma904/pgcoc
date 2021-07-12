@@ -6,6 +6,7 @@ class NomEspaceForm(forms.Form):
     Nom_de_l_espace = forms.CharField(max_length=100)
 
 class AgendaForm(forms.Form):
+
     CHOICES = (('a','a'),('b','b'),('c','c')) #à remplacer par la liste des activités
     Lundi_matin = forms.MultipleChoiceField(required=False, choices=CHOICES, widget=forms.CheckboxSelectMultiple())
     Lundi_après_midi = forms.MultipleChoiceField(required=False, choices=CHOICES, widget=forms.CheckboxSelectMultiple())
