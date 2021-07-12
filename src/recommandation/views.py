@@ -8,12 +8,11 @@ def accueil_uti_view(request, id):
     utilisateur = Utilisateur.objects.get(id=id)
     if utilisateur.ids_espaces is not None:
         espaces = Espace.objects.filter(id_espace__in = utilisateur.ids_espaces)
-        agendas = Agenda.objects.filter(id_espace__in = utilisateur.ids_espaces)
+        
     else:
         espaces = None
-        agendas = None
 
-    context = { 'uti': utilisateur, 'esps': espaces,  'ags': agendas }
+    context = { 'uti': utilisateur, 'esps': espaces }
     return render(request, 'recommandation/utilisateur_accueil.html', context)
 
 def login_view(request):
