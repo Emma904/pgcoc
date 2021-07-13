@@ -1,13 +1,14 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
-from .models import Espace, Agenda, Utilisateur
+from .models import Espace, Agenda, Utilisateur, Outil
 from .forms import ActsPonctForm, NomEspaceForm, AgendaForm, OutilsUtiForm
 # Create your views here.
 
 def login_view(request):
 
     pass #faire soit un faux login qui crée juste l'id dans la bdd si inexistant et sinon faire vrais register et login
+
 
 
 def accueil_uti_view(request, id):
@@ -23,37 +24,52 @@ def accueil_uti_view(request, id):
     return render(request, 'utilisateur_accueil.html', context)
 
 
-def selection_outils_view(request, id_esp):
-    
-    e = Espace.objects.get(id_espace=id_esp)
+
+def espace_create_view(request, id):
 
     if request.method == 'POST':
-            outils_uti_form = OutilsUtiForm(request.POST)
-            if outils_uti_form.is_valid():
-                outils_uti = outils_uti_form.cleaned_data['Outils_utilisés']
-                e.outils_utilisés = outils_uti
-                e.save()
-                return redirect('Détail espace', id_esp = e.id_espace)
+            nom_espace_form = NomEspaceForm(request.POST)
+            if nom_espace_form.is_valid():
+                nom_espace = nom_espace_form.cleaned_data['Nom_de_l_espace']
+                e = Espace(nom_espace=nom_espace)
+
+                agenda_form = AgendaForm(request.POST)
+                if agenda_form.is_valid():
+                    lundi_matin = agenda_form.cleaned_data['Lundi_matin']
+                    lundi_aprem = agenda_form.cleaned_data['Lundi_après_midi']
+                    mardi_matin = agenda_form.cleaned_data['Mardi_matin']
+                    mardi_aprem = agenda_form.cleaned_data['Mardi_après_midi']
+                    mercredi_matin = agenda_form.cleaned_data['Mercredi_matin']
+                    mercredi_aprem = agenda_form.cleaned_data['Mercredi_après_midi']
+                    jeudi_matin = agenda_form.cleaned_data['Jeudi_matin']
+                    jeudi_aprem = agenda_form.cleaned_data['Jeudi_après_midi']
+                    vendredi_matin = agenda_form.cleaned_data['Vendredi_matin']
+                    vendredi_aprem = agenda_form.cleaned_data['Vendredi_après_midi']
+                    a = Agenda(lundi_matin=lundi_matin, lundi_aprem=lundi_aprem, mardi_matin=mardi_matin, mardi_aprem=mardi_aprem,
+                    mercredi_matin=mercredi_matin, mercredi_aprem=mercredi_aprem, jeudi_matin=jeudi_matin, jeudi_aprem=jeudi_aprem,
+                    vendredi_matin=vendredi_matin, vendredi_aprem=vendredi_aprem)
+                    e.save()
+                    a.save()
+                    uti = Utilisateur.objects.get(id=id)
+                    uti.ids_espaces.append(e.id_espace)
+                    uti.save()
+
+                    instance_esp = get_object_or_404(Espace, id_espace = e.id_espace)
+                    acts_ponct_form = ActsPonctForm(request.POST)
+                    if acts_ponct_form.is_valid():
+                        acts_ponct = acts_ponct_form.cleaned_data['Activités_ponctuelles']
+                        instance_esp.acts_ponct = acts_ponct
+                        instance_esp.save()
+                        return redirect('Détail espace', id_esp = instance_esp.id_espace)
+                        
     else:
-          outils_uti_form = OutilsUtiForm()
-
-    context = { 'outils_uti_form': outils_uti_form, 'esp': e }
-    return render(request, 'selection_outils.html', context)
-
-
-def espace_delete_view(request, id_esp):
-
-    esp = get_object_or_404(Espace, id_espace = id_esp) 
-    ag = get_object_or_404(Agenda, id_espace = id_esp)
-    uti = Utilisateur.objects.filter(ids_espaces__icontains = esp.id_espace).first()
+        nom_espace_form = NomEspaceForm()    
+        agenda_form = AgendaForm()
+        acts_ponct_form = ActsPonctForm()
     
-    if request.method == 'POST':      
-        esp.delete()
-        ag.delete()
-        uti.ids_espaces.remove(id_esp)
-        uti.save()        
-        return redirect('Accueil utilisateur', id=uti.id)
-    return render(request, 'espace_delete.html')
+    context = { 'nom_espace_form': nom_espace_form, 'agenda_form': agenda_form, 'acts_ponct_form': acts_ponct_form}
+    return render(request, 'espace_create.html', context)
+
 
 
 def espace_edit_view(request, id_esp):
@@ -113,53 +129,19 @@ def espace_edit_view(request, id_esp):
 
 
 
-def espace_create_view(request, id):
+def espace_delete_view(request, id_esp):
 
-    if request.method == 'POST':
-            nom_espace_form = NomEspaceForm(request.POST)
-            if nom_espace_form.is_valid():
-                nom_espace = nom_espace_form.cleaned_data['Nom_de_l_espace']
-                e = Espace(nom_espace=nom_espace)
-
-                agenda_form = AgendaForm(request.POST)
-                if agenda_form.is_valid():
-                    lundi_matin = agenda_form.cleaned_data['Lundi_matin']
-                    lundi_aprem = agenda_form.cleaned_data['Lundi_après_midi']
-                    mardi_matin = agenda_form.cleaned_data['Mardi_matin']
-                    mardi_aprem = agenda_form.cleaned_data['Mardi_après_midi']
-                    mercredi_matin = agenda_form.cleaned_data['Mercredi_matin']
-                    mercredi_aprem = agenda_form.cleaned_data['Mercredi_après_midi']
-                    jeudi_matin = agenda_form.cleaned_data['Jeudi_matin']
-                    jeudi_aprem = agenda_form.cleaned_data['Jeudi_après_midi']
-                    vendredi_matin = agenda_form.cleaned_data['Vendredi_matin']
-                    vendredi_aprem = agenda_form.cleaned_data['Vendredi_après_midi']
-                    a = Agenda(lundi_matin=lundi_matin, lundi_aprem=lundi_aprem, mardi_matin=mardi_matin, mardi_aprem=mardi_aprem,
-                    mercredi_matin=mercredi_matin, mercredi_aprem=mercredi_aprem, jeudi_matin=jeudi_matin, jeudi_aprem=jeudi_aprem,
-                    vendredi_matin=vendredi_matin, vendredi_aprem=vendredi_aprem)
-                    e.save()
-                    a.save()
-                    uti = Utilisateur.objects.get(id=id)
-                    uti.ids_espaces.append(e.id_espace)
-                    uti.save()
-
-                    instance_esp = get_object_or_404(Espace, id_espace = e.id_espace)
-                    acts_ponct_form = ActsPonctForm(request.POST)
-                    if acts_ponct_form.is_valid():
-                        acts_ponct = acts_ponct_form.cleaned_data['Activités_ponctuelles']
-                        instance_esp.acts_ponct = acts_ponct
-                        instance_esp.save()
-                        return redirect('Détail espace', id_esp = instance_esp.id_espace)
-                        
-    else:
-        nom_espace_form = NomEspaceForm()    
-        agenda_form = AgendaForm()
-        acts_ponct_form = ActsPonctForm()
+    esp = get_object_or_404(Espace, id_espace = id_esp) 
+    ag = get_object_or_404(Agenda, id_espace = id_esp)
+    uti = Utilisateur.objects.filter(ids_espaces__icontains = esp.id_espace).first()
     
-
-    context = { 'nom_espace_form': nom_espace_form, 'agenda_form': agenda_form, 'acts_ponct_form': acts_ponct_form}
-    return render(request, 'espace_create.html', context)
-
-
+    if request.method == 'POST':      
+        esp.delete()
+        ag.delete()
+        uti.ids_espaces.remove(id_esp)
+        uti.save()        
+        return redirect('Accueil utilisateur', id=uti.id)
+    return render(request, 'espace_delete.html')
 
 
 
@@ -170,3 +152,48 @@ def espace_detail_view(request,id_esp):
 
     context = { 'esp': esp,  'ag': ag }
     return render(request, 'espace_detail.html', context)
+
+
+
+def selection_outils_view(request, id_esp):
+    
+    e = Espace.objects.get(id_espace=id_esp)
+
+    if request.method == 'POST':
+            outils_uti_form = OutilsUtiForm(request.POST)
+            if outils_uti_form.is_valid():
+                outils_uti = outils_uti_form.cleaned_data['Outils_utilisés']
+                e.outils_utilisés = outils_uti
+                e.save()
+                return redirect('Détail espace', id_esp = e.id_espace)
+    else:
+          outils_uti_form = OutilsUtiForm()
+
+    context = { 'outils_uti_form': outils_uti_form, 'esp': e }
+    return render(request, 'selection_outils.html', context)
+
+
+
+def comparaison_outils_view(request, id_esp):
+
+    e = Espace.objects.get(id_espace=id_esp)
+    outilsuti = Outil.objects.filter(outil__in = e.outils_utilisés)
+
+    if outilsuti is None:
+        print('Outils utilisés non renseignés, veuillez indiquer les outils que vous utilisez actuellement pour obtenir la comparaison')
+    else:
+        outilsrec = Outil.objects.filter(outil__in = e.outils_recommandés)
+        foncsuti = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, outilsuti))))
+        foncsrec = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, outilsrec))))
+
+    context = { 'foncsuti': foncsuti, 'foncsrec': foncsrec }
+    return render(request, 'comparaison_outils.html', context)
+
+
+def outil_detail_view(request, nom_outil):
+
+    outil = Outil.objects.filter(outil=nom_outil)
+    outil_valeurs = list(outil)[0]
+    fonctionnalites = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, outil))))
+
+    return render(request, 'outil_detail.html', { 'outil': outil_valeurs, 'fonctionnalites': fonctionnalites })

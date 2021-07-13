@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block titre %}
+    <title>Comparaison des outils utilisés et recommandés</title>
+{% endblock %}
+
+{% block content %}
+<h2>{{ outil.outil }}</h2>
+<h3>Catégorie: {{ outil.categorie }}</h3>
+<h4>Fonctionnalités: {% for fonc in fonctionnalites %}
+    <li>{{ fonc }}</li> {% endfor %}
+</h4>
+{% endblock %}

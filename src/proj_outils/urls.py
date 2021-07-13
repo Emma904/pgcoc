@@ -26,5 +26,6 @@ urlpatterns = [
     path('accueil/<int:id>/', views.accueil_uti_view, name='Accueil utilisateur'),
     path('delete/<int:id_esp>/', views.espace_delete_view, name='Supprimer espace'),
     path('selection_outils/<int:id_esp>/', views.selection_outils_view, name='Sélection outils'),
-    
+    path('comparaison_outils/<int:id_esp>/', views.comparaison_outils_view, name='Comparaison outils'),
+    path('outil/<str:nom_outil>/', views.outil_detail_view, name='Détail outil'),
 ]
