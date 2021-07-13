@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block titre %}
+<title>Modification d'espace</title>
+{% endblock %}
 
+{% block content %}
 <form action = '.', method = 'POST'>{% csrf_token %}
     <h2>Nom de l'espace</h2>
     {{ nom_espace_form.as_p }}
@@ -11,5 +14,4 @@
     {{ acts_ponct_form.as_p }}
     <input type='submit' value='Enregistrer'>
 </form>
-
 {% endblock %}

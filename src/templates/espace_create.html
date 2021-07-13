@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block titre %}
+<title>Création d'espace</title>
+{% endblock %}
+
 {% block content %}
 <form action = '.', method = 'POST'>{% csrf_token %}
     <h2>Nom de l'espace</h2>

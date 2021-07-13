@@ -14,19 +14,11 @@ def accueil_uti_view(request, id):
         espaces = None
 
     context = { 'uti': utilisateur, 'esps': espaces }
-    return render(request, 'recommandation/utilisateur_accueil.html', context)
+    return render(request, 'utilisateur_accueil.html', context)
 
 def login_view(request):
 
-    if request.method == 'POST':
-            id = request.POST.get('id')
-            utilisateur = authenticate(request, id=id)
-        
-            if utilisateur is not None:
-                login(request, id)
-
-    context = {}
-    return render(request, 'login.html', context)
+    pass #faire soit un faux login qui crée juste l'id dans la bdd si inexistant et sinon faire vrais register et login
 
 
 def espace_delete_view(request, id_esp):
@@ -40,7 +32,7 @@ def espace_delete_view(request, id_esp):
         uti.ids_espaces.remove(id_esp)
         uti.save()        
         return redirect('Accueil utilisateur', id=uti.id)
-    return render(request, 'recommandation/espace_delete.html')
+    return render(request, 'espace_delete.html')
 
 
 def espace_edit_view(request, id_esp):
@@ -95,7 +87,7 @@ def espace_edit_view(request, id_esp):
           acts_ponct_form = ActsPonctForm(initial={'Activités ponctuelles': instance_esp.acts_ponct})
 
     context = { 'nom_espace_form': nom_espace_form, 'agenda_form': agenda_form, 'acts_ponct_form': acts_ponct_form}
-    return render(request, 'recommandation/espace_edit.html', context)
+    return render(request, 'espace_edit.html', context)
 
 
 
@@ -142,7 +134,7 @@ def espace_create_view(request, id):
     
 
     context = { 'nom_espace_form': nom_espace_form, 'agenda_form': agenda_form, 'acts_ponct_form': acts_ponct_form}
-    return render(request, 'recommandation/espace_create.html', context)
+    return render(request, 'espace_create.html', context)
 
 
 
@@ -154,4 +146,4 @@ def espace_detail_view(request,id_esp):
     ag = Agenda.objects.get(id_espace = id_esp)
 
     context = { 'esp': esp,  'ag': ag }
-    return render(request, 'recommandation/espace_detail.html', context)
+    return render(request, 'espace_detail.html', context)

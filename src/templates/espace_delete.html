@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block titre %}
+<title>Suppression d'espace</title>
+{% endblock %}
+
 {% block content %}
 <form method="POST" action="">
     {% csrf_token %}

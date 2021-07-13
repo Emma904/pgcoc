@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 
+{% block titre %}
+<head>
+    <title>Accueil {{ uti.id }}</title>
+</head>
+{% endblock %}
+
 {% block content %}
 <h1>Page d'accueil de {{ uti.id }}</h1>
-<h2>Vos espaces:</h2>
+<h2>Vos espaces de travail:</h2>
 {% for esp in esps %}
 <li><a href="/espace/{{ esp.id_espace }}/">{{ esp.nom_espace }}</a></li>
 {% endfor %}
+</br><a href="/create/{{uti.id}}/">Créer un nouvel espace de travail</a>
 {% endblock %}

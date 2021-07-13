@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block titre %}
+    <title>Détail de {{ esp.nom_espace }}</title>
+{% endblock %}
 
+{% block content %}
 <h1>Votre espace: {{ esp.nom_espace }}</h1>
 <h2>Votre semaine type</h2>
 <p> Lundi matin: {{ ag.lundi_matin }}</p>
