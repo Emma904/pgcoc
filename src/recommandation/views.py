@@ -30,9 +30,10 @@ def selection_outils_view(request, id_esp):
     if request.method == 'POST':
             outils_uti_form = OutilsUtiForm(request.POST)
             if outils_uti_form.is_valid():
-                outils_uti = outils_uti_form.cleaned_data['Outils_recommandés']
+                outils_uti = outils_uti_form.cleaned_data['Outils_utilisés']
                 e.outils_utilisés = outils_uti
                 e.save()
+                return redirect('Détail espace', id_esp = e.id_espace)
     else:
           outils_uti_form = OutilsUtiForm()
 
@@ -96,7 +97,8 @@ def espace_edit_view(request, id_esp):
                     instance_esp.acts_ponct = acts_ponct
                     instance_esp.save()
                     instance_ag.save()
-                    
+                    return redirect('Détail espace', id_esp = instance_esp.id_espace)
+
     else:
           nom_espace_form = NomEspaceForm(initial={'Nom_de_l_espace': instance_esp.nom_espace})    
           agenda_form = AgendaForm(initial={'Lundi matin': instance_ag.lundi_matin, 'Lundi après-midi': instance_ag.lundi_aprem,
@@ -146,6 +148,7 @@ def espace_create_view(request, id):
                         acts_ponct = acts_ponct_form.cleaned_data['Activités_ponctuelles']
                         instance_esp.acts_ponct = acts_ponct
                         instance_esp.save()
+                        return redirect('Détail espace', id_esp = instance_esp.id_espace)
                         
     else:
         nom_espace_form = NomEspaceForm()    

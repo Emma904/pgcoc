@@ -5,9 +5,9 @@ from django.db import models
 class Espace(models.Model):
     id_espace = models.AutoField(primary_key=True)
     nom_espace = models.TextField()
-    acts_ponct = models.TextField(default='[]', blank=True, null=True)
-    outils_utilisés = models.TextField(default='[]', blank=True, null=True)
-    outils_recommandés = models.TextField(default='[]', blank=True, null=True)
+    acts_ponct = models.JSONField(default=list, blank=True, null=True)
+    outils_utilisés = models.JSONField(default=list, blank=True, null=True)
+    outils_recommandés = models.JSONField(default=list, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -15,16 +15,16 @@ class Espace(models.Model):
 
 class Agenda(models.Model):
     id_espace = models.AutoField(primary_key=True)
-    lundi_matin = models.TextField(default='[]', blank=True, null=True)
-    lundi_aprem = models.TextField(default='[]', blank=True, null=True)
-    mardi_matin = models.TextField(default='[]', blank=True, null=True)
-    mardi_aprem = models.TextField(default='[]', blank=True, null=True)
-    mercredi_matin = models.TextField(default='[]', blank=True, null=True)
-    mercredi_aprem = models.TextField(default='[]', blank=True, null=True)
-    jeudi_matin = models.TextField(default='[]', blank=True, null=True)
-    jeudi_aprem = models.TextField(default='[]', blank=True, null=True)
-    vendredi_matin = models.TextField(default='[]', blank=True, null=True)
-    vendredi_aprem = models.TextField(default='[]', blank=True, null=True)
+    lundi_matin = models.JSONField(default=list, blank=True, null=True)
+    lundi_aprem = models.JSONField(default=list, blank=True, null=True)
+    mardi_matin = models.JSONField(default=list, blank=True, null=True)
+    mardi_aprem = models.JSONField(default=list, blank=True, null=True)
+    mercredi_matin = models.JSONField(default=list, blank=True, null=True)
+    mercredi_aprem = models.JSONField(default=list, blank=True, null=True)
+    jeudi_matin = models.JSONField(default=list, blank=True, null=True)
+    jeudi_aprem = models.JSONField(default=list, blank=True, null=True)
+    vendredi_matin = models.JSONField(default=list, blank=True, null=True)
+    vendredi_aprem = models.JSONField(default=list, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -34,7 +34,7 @@ class Agenda(models.Model):
 class Activite(models.Model):
     id = models.BigAutoField(primary_key=True)
     activite = models.TextField(unique=True)
-    besoins = models.TextField(default='[]')
+    besoins = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -55,7 +55,7 @@ class Outil(models.Model):
     id = models.BigAutoField(primary_key=True)
     outil = models.TextField(unique=True)
     categorie = models.TextField()
-    fonctionnalites = models.TextField(default='[]')
+    fonctionnalites = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False

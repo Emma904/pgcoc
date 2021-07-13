@@ -40,4 +40,4 @@ class OutilsUtiForm(forms.Form):
     l_choices = [(l_outils[i],l_outils[i]) for i in range(len(l_outils))]
 
     CHOICES = tuple(l_choices)
-    Outil_utilisés = forms.MultipleChoiceField(required=False, choices=CHOICES, widget=forms.CheckboxSelectMultiple)
+    Outils_utilisés = forms.MultipleChoiceField(required=False, choices=CHOICES, widget=forms.CheckboxSelectMultiple)
