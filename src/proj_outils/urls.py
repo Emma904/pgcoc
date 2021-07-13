@@ -25,5 +25,6 @@ urlpatterns = [
     path('login/', views.login_view, name='Connexion'),
     path('accueil/<int:id>/', views.accueil_uti_view, name='Accueil utilisateur'),
     path('delete/<int:id_esp>/', views.espace_delete_view, name='Supprimer espace'),
+    path('selection_outils/<int:id_esp>/', views.selection_outils_view, name='Sélection outils'),
     
 ]

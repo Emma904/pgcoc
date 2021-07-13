@@ -2,10 +2,16 @@ from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from .models import Espace, Agenda, Utilisateur
-from .forms import ActsPonctForm, NomEspaceForm, AgendaForm
+from .forms import ActsPonctForm, NomEspaceForm, AgendaForm, OutilsUtiForm
 # Create your views here.
 
+def login_view(request):
+
+    pass #faire soit un faux login qui crée juste l'id dans la bdd si inexistant et sinon faire vrais register et login
+
+
 def accueil_uti_view(request, id):
+    
     utilisateur = Utilisateur.objects.get(id=id)
     if utilisateur.ids_espaces is not None:
         espaces = Espace.objects.filter(id_espace__in = utilisateur.ids_espaces)
@@ -16,12 +22,26 @@ def accueil_uti_view(request, id):
     context = { 'uti': utilisateur, 'esps': espaces }
     return render(request, 'utilisateur_accueil.html', context)
 
-def login_view(request):
 
-    pass #faire soit un faux login qui crée juste l'id dans la bdd si inexistant et sinon faire vrais register et login
+def selection_outils_view(request, id_esp):
+    
+    e = Espace.objects.get(id_espace=id_esp)
+
+    if request.method == 'POST':
+            outils_uti_form = OutilsUtiForm(request.POST)
+            if outils_uti_form.is_valid():
+                outils_uti = outils_uti_form.cleaned_data['Outils_recommandés']
+                e.outils_utilisés = outils_uti
+                e.save()
+    else:
+          outils_uti_form = OutilsUtiForm()
+
+    context = { 'outils_uti_form': outils_uti_form, 'esp': e }
+    return render(request, 'selection_outils.html', context)
 
 
 def espace_delete_view(request, id_esp):
+
     esp = get_object_or_404(Espace, id_espace = id_esp) 
     ag = get_object_or_404(Agenda, id_espace = id_esp)
     uti = Utilisateur.objects.filter(ids_espaces__icontains = esp.id_espace).first()

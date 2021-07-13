@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block titre %}
+<title>Sélection des outils utilisés pour {{ esp.nom_espace }}</title>
+{% endblock %}
+
+{% block content %}
+<h2>Sélectionnez les outils utilisés dans le cadre de l'espace de travail " {{ esp.nom_espace }}"</h2>
+<form action = '.', method = 'POST'>{% csrf_token %}
+    
+    {{ outils_uti_form.as_p }}
+
+    <input type='submit' value='Enregistrer'>
+</form>
+{% endblock %}
