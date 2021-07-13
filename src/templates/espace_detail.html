@@ -7,8 +7,8 @@
 {% block content %}
 <h1>Votre espace: {{ esp.nom_espace }}</h1>
 
-<a href="/espace_edit/{{ esp.id_espace }}" >Modifier l'espace</a> </br>
-<a href="/delete/{{ esp.id_espace}}" > Supprimer l'espace</a>
+<a href="/espace_edit/{{ esp.id_espace }}" >Modifier l'espace de travail</a> </br>
+<a href="/delete/{{ esp.id_espace}}" >Supprimer l'espace de travail</a>
 
 <h2>Votre semaine type</h2>
 <h4><li> Lundi matin:</li></h4> {% for act in ag.lundi_matin %}
@@ -37,22 +37,12 @@
 <li>{{ act_ponct }}</li>
 {% endfor %}
 
-<h2>Vos outils utilisés:</h2>
-<h4><a href="/selection_outils/{{ esp.id_espace }}" >Renseigner/modifier les outils utilisés actuellement</a></h4>
-{% for outil_uti in outils_uti %}
-{% for attr in outil_uti %}
-{% if forloop.counter == 1 %} <h3>{{ attr }}</h3> {% endif %}
-{% if forloop.counter == 2 %} <h4>Catégorie: {{ attr }}</h4> {% endif %}
-{% if forloop.counter == 3 %} <h4>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h4> {% endif %}
-{% endfor %} {% endfor %}
+<h3>
+<a href="">Visionner sa liste d'outils recommandés</a> </br>
 
-<h2>Vos outils recommandés:</h2>
-{% for outil_rec in outils_rec %}
-{% for attr in outil_rec %}
-{% if forloop.counter == 1 %} <h3>{{ attr }}</h3> {% endif %}
-{% if forloop.counter == 2 %} <h4>Catégorie: {{ attr }}</h4> {% endif %}
-{% if forloop.counter == 3 %} <h4>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li> {% endfor %}</h4> {% endif %}
-{% endfor %} {% endfor %}
+<a href='/selection_outils/{{ esp.id_espace }}/'>Renseigner ou modifier la liste des outils utilisés</a> </br>
 
-
+<a href='/comparaison_outils/{{ esp.id_espace }}/'>Obtenir la comparaison entre la liste des outils recommandés et
+    la liste des outils utilisés</a> </br>
+</h3>
 {% endblock %}

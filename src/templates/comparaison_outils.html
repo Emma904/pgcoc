@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
 
+
 {% block titre %}
     <title>Comparaison des outils utilisés et recommandés</title>
 {% endblock %}
 
 {% block content %}
-<h4>Les fonctionnalités dont disposent les outils que vous utilisez</h4>
-<p>{{ foncsuti }}</p>
-<h4>Les fonctionnalités dont disposent les outils qui vous ont été recommandés</h4>
-<p>{{ foncsrec }}</p>
+<table border="0"><tr><td><h2>Vos outils utilisés:</h2>
+<h4><a href="/selection_outils/{{ esp.id_espace }}" >Modifier la liste des outils utilisés actuellement</a></h4></td>
+{% for outil_uti in outils_uti %}<td>
+{% for attr in outil_uti %}
+{% if forloop.counter == 1 %} <h3>{{ attr }}</h3> {% endif %}
+{% if forloop.counter == 2 %} <h4>Catégorie: {{ attr }}</h4> {% endif %}
+{% if forloop.counter == 3 %} <h4>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h4> {% endif %}
+{% endfor %} {% endfor %} </td> </tr>
+
+<tr><td><h2>Vos outils recommandés:</h2></td>
+{% for outil_rec in outils_rec %}<td>
+{% for attr in outil_rec %}
+{% if forloop.counter == 1 %} <h3>{{ attr }}</h3> {% endif %}
+{% if forloop.counter == 2 %} <h4>Catégorie: {{ attr }}</h4> {% endif %}
+{% if forloop.counter == 3 %} <h4>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li> {% endfor %}</h4> {% endif %}
+{% endfor %} {% endfor %} </td></tr></table>
+
+<h2>Comparaison des fonctionnalités:</h2>
+
 {% endblock %}

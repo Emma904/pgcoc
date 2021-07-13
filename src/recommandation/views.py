@@ -99,7 +99,7 @@ def espace_edit_view(request, id_esp):
                 instance_ag.lundi_matin=lundi_matin
                 instance_ag.lundi_aprem=lundi_aprem
                 instance_ag.mardi_matin=mardi_matin
-                instance_ag.mardi_aprem=mardi_aprem,
+                instance_ag.mardi_aprem=mardi_aprem
                 instance_ag.mercredi_matin=mercredi_matin
                 instance_ag.mercredi_aprem=mercredi_aprem
                 instance_ag.jeudi_matin=jeudi_matin
@@ -149,23 +149,8 @@ def espace_detail_view(request,id_esp):
     
     esp = Espace.objects.get(id_espace = id_esp)
     ag = Agenda.objects.get(id_espace = id_esp)
-    liste_finale_uti = [] #liste de ['outil','catégorie', 'fonctionnalités']
-    outilsuti = esp.outils_utilisés
-    for outiluti in outilsuti:
-        liste_ini = list(Outil.objects.filter(outil=outiluti))
-        l_nom_cat = liste_ini[0]
-        foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
-        liste_finale_uti.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
 
-    liste_finale_rec = [] #liste de ['outil','catégorie', 'fonctionnalités']
-    outilsrec = esp.outils_recommandés
-    for outilrec in outilsrec:
-        liste_ini = list(Outil.objects.filter(outil=outilrec))
-        l_nom_cat = liste_ini[0]
-        foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
-        liste_finale_rec.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
-
-    context = { 'esp': esp,  'ag': ag, 'outils_uti': liste_finale_uti, 'outils_rec': liste_finale_rec }
+    context = { 'esp': esp,  'ag': ag }
     return render(request, 'espace_detail.html', context)
 
 
@@ -180,7 +165,7 @@ def selection_outils_view(request, id_esp):
                 outils_uti = outils_uti_form.cleaned_data['Outils_utilisés']
                 e.outils_utilisés = outils_uti
                 e.save()
-                return redirect('Détail espace', id_esp = e.id_espace)
+                return redirect('Comparaison outils', id_esp = e.id_espace)
     else:
           outils_uti_form = OutilsUtiForm()
 
@@ -191,17 +176,29 @@ def selection_outils_view(request, id_esp):
 
 def comparaison_outils_view(request, id_esp):
 
-    e = Espace.objects.get(id_espace=id_esp)
-    outilsuti = Outil.objects.filter(outil__in = e.outils_utilisés)
+    esp = Espace.objects.get(id_espace=id_esp)
+    outilsuti = esp.outils_utilisés
 
-    if outilsuti is None:
-        print('Outils utilisés non renseignés, veuillez indiquer les outils que vous utilisez actuellement pour obtenir la comparaison')
+    if outilsuti == []:
+        redirect('Sélection outils', id_esp=esp.id_espace)
     else:
-        outilsrec = Outil.objects.filter(outil__in = e.outils_recommandés)
-        foncsuti = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, outilsuti))))
-        foncsrec = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, outilsrec))))
+        liste_finale_uti = [] #liste de ['outil','catégorie', 'fonctionnalités']
+        outilsuti = esp.outils_utilisés
+        for outiluti in outilsuti:
+            liste_ini = list(Outil.objects.filter(outil=outiluti))
+            l_nom_cat = liste_ini[0]
+            foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
+            liste_finale_uti.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
 
-    context = { 'foncsuti': foncsuti, 'foncsrec': foncsrec }
+        liste_finale_rec = [] #liste de ['outil','catégorie', 'fonctionnalités']
+        outilsrec = esp.outils_recommandés
+        for outilrec in outilsrec:
+            liste_ini = list(Outil.objects.filter(outil=outilrec))
+            l_nom_cat = liste_ini[0]
+            foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
+            liste_finale_rec.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
+    
+    context = { 'outils_uti': liste_finale_uti, 'outils_rec': liste_finale_rec }
     return render(request, 'comparaison_outils.html', context)
 
 
