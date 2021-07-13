@@ -39,13 +39,20 @@
 
 <h2>Vos outils utilisés:</h2>
 <h4><a href="/selection_outils/{{ esp.id_espace }}" >Renseigner/modifier les outils utilisés actuellement</a></h4>
-{% for outil_utilisé in esp.outils_utilisés %}
-<li>{{ outil_utilisé }}</li>
-{% endfor %}
+{% for outil_uti in outils_uti %}
+{% for attr in outil_uti %}
+{% if forloop.counter == 1 %} <h3>{{ attr }}</h3> {% endif %}
+{% if forloop.counter == 2 %} <h4>Catégorie: {{ attr }}</h4> {% endif %}
+{% if forloop.counter == 3 %} <h4>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h4> {% endif %}
+{% endfor %} {% endfor %}
 
 <h2>Vos outils recommandés:</h2>
-{% for outil_recommandé in esp.outils_recommandés %}
-<li>{{ outil_recommandé }}</li>
-{% endfor %}
+{% for outil_rec in outils_rec %}
+{% for attr in outil_rec %}
+{% if forloop.counter == 1 %} <h3>{{ attr }}</h3> {% endif %}
+{% if forloop.counter == 2 %} <h4>Catégorie: {{ attr }}</h4> {% endif %}
+{% if forloop.counter == 3 %} <h4>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li> {% endfor %}</h4> {% endif %}
+{% endfor %} {% endfor %}
+
 
 {% endblock %}

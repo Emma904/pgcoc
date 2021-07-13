@@ -149,8 +149,23 @@ def espace_detail_view(request,id_esp):
     
     esp = Espace.objects.get(id_espace = id_esp)
     ag = Agenda.objects.get(id_espace = id_esp)
+    liste_finale_uti = [] #liste de ['outil','catégorie', 'fonctionnalités']
+    outilsuti = esp.outils_utilisés
+    for outiluti in outilsuti:
+        liste_ini = list(Outil.objects.filter(outil=outiluti))
+        l_nom_cat = liste_ini[0]
+        foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
+        liste_finale_uti.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
 
-    context = { 'esp': esp,  'ag': ag }
+    liste_finale_rec = [] #liste de ['outil','catégorie', 'fonctionnalités']
+    outilsrec = esp.outils_recommandés
+    for outilrec in outilsrec:
+        liste_ini = list(Outil.objects.filter(outil=outilrec))
+        l_nom_cat = liste_ini[0]
+        foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
+        liste_finale_rec.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
+
+    context = { 'esp': esp,  'ag': ag, 'outils_uti': liste_finale_uti, 'outils_rec': liste_finale_rec }
     return render(request, 'espace_detail.html', context)
 
 
@@ -190,10 +205,3 @@ def comparaison_outils_view(request, id_esp):
     return render(request, 'comparaison_outils.html', context)
 
 
-def outil_detail_view(request, nom_outil):
-
-    outil = Outil.objects.filter(outil=nom_outil)
-    outil_valeurs = list(outil)[0]
-    fonctionnalites = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, outil))))
-
-    return render(request, 'outil_detail.html', { 'outil': outil_valeurs, 'fonctionnalites': fonctionnalites })
