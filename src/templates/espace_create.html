@@ -3,14 +3,19 @@
 {% block titre %}
 <title>Création d'espace</title>
 {% endblock %}
-
+<br />
 {% block content %}
 <form action = '.', method = 'POST'>{% csrf_token %}
-    <h2>Nom de l'espace</h2>
+    <h3>Création de l'espace de travail</h3>
+    <br />
     {{ nom_espace_form.as_p }}
-    <h2>Agenda</h2>
+    <br />
+    <h4>Agenda</h4>
+    <br />
     {{ agenda_form.as_p }}
-    <h2>Activités ponctuelles</h2>
+    <br />
+    <h4>Activités ponctuelles</h4>
+    <br />
     {{ acts_ponct_form.as_p }}
     <input type='submit' value='Enregistrer'>
 </form>

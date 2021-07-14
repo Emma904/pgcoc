@@ -180,7 +180,9 @@ def comparaison_outils_view(request, id_esp):
     outilsuti = esp.outils_utilisés
 
     if outilsuti == []:
-        redirect('Sélection outils', id_esp=esp.id_espace)
+        return redirect('Sélection outils', id_esp=esp.id_espace)
+        # liste_finale_uti=[]
+        # liste_finale_rec=[]
     else:
         liste_finale_uti = [] #liste de ['outil','catégorie', 'fonctionnalités']
         outilsuti = esp.outils_utilisés

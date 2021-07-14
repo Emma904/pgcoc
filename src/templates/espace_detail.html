@@ -5,43 +5,47 @@
 {% endblock %}
 
 {% block content %}
-<h1>Votre espace: {{ esp.nom_espace }}</h1>
-
+<br />
+<h2><u>Votre espace: {{ esp.nom_espace }}</u></h2>
+<br />
 <a href="/espace_edit/{{ esp.id_espace }}" >Modifier l'espace de travail</a> </br>
-<a href="/delete/{{ esp.id_espace}}" >Supprimer l'espace de travail</a>
-
-<h2>Votre semaine type</h2>
-<h4><li> Lundi matin:</li></h4> {% for act in ag.lundi_matin %}
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Lundi après-midi:</li></h4> {% for act in ag.lundi_aprem %} 
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Mardi matin:</li></h4> {% for act in ag.mardi_matin %} 
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Mardi après-midi:</li></h4> {% for act in ag.mardi_aprem %} 
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Mercredi matin:</li></h4> {% for act in ag.mercredi_matin %} 
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Mercredi après-midi:</li></h4> {% for act in ag.mercredi_aprem %} 
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Jeudi matin:</li></h4> {% for act in ag.jeudi_matin %} 
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Jeudi après-midi:</li></h4> {% for act in ag.jeudi_aprem %} 
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Vendredi matin:</li></h4>  {% for act in ag.vendredi_matin %} 
-<p>- {{ act }}</p> {% endfor %}
-<h4><li> Vendredi après-midi:</li></h4>  {% for act in ag.vendredi_aprem %} 
-<p>- {{ act }}</p> {% endfor %}
-
-<h2>Vos activités ponctuelles:</h2>
+<br />
+<a href="/delete/{{ esp.id_espace}}" >Supprimer l'espace de travail</a> </br>
+<br />
+<h3><u>Votre semaine type:</u></h3>
+    <br />
+<h5><li> Lundi matin:</li></h5> {% for act in ag.lundi_matin %}
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Lundi après-midi:</li></h5> {% for act in ag.lundi_aprem %} 
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Mardi matin:</li></h5> {% for act in ag.mardi_matin %} 
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Mardi après-midi:</li></h5> {% for act in ag.mardi_aprem %} 
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Mercredi matin:</li></h5> {% for act in ag.mercredi_matin %} 
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Mercredi après-midi:</li></h5> {% for act in ag.mercredi_aprem %} 
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Jeudi matin:</li></h5> {% for act in ag.jeudi_matin %} 
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Jeudi après-midi:</li></h5> {% for act in ag.jeudi_aprem %} 
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Vendredi matin:</li></h5>  {% for act in ag.vendredi_matin %} 
+<p>- {{ act }}</p> {% endfor %} 
+<h5><li> Vendredi après-midi:</li></h5>  {% for act in ag.vendredi_aprem %} 
+<p>- {{ act }}</p> {% endfor %} 
+<br />
+ <h3><u>Vos activités ponctuelles:</u></h3>
+<br />
 {% for act_ponct in esp.acts_ponct %}
 <li>{{ act_ponct }}</li>
 {% endfor %}
-
-<h3>
-<a href="">Visionner sa liste d'outils recommandés</a> </br>
-
+<br />
+<br />
+<h3><a href="">Visionner sa liste d'outils recommandés</a> </br>
+    <br />
 <a href='/selection_outils/{{ esp.id_espace }}/'>Renseigner ou modifier la liste des outils utilisés</a> </br>
-
+<br />
 <a href='/comparaison_outils/{{ esp.id_espace }}/'>Obtenir la comparaison entre la liste des outils recommandés et
     la liste des outils utilisés</a> </br>
 </h3>

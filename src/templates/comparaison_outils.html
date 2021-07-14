@@ -6,23 +6,27 @@
 {% endblock %}
 
 {% block content %}
-<table border="0"><tr><td><h2>Vos outils utilisés:</h2>
-<h4><a href="/selection_outils/{{ esp.id_espace }}" >Modifier la liste des outils utilisés actuellement</a></h4></td>
-{% for outil_uti in outils_uti %}<td>
+
+<h2><u>Vos outils utilisés:</u></h2>
+<br />
+<h4><a href="/selection_outils/{{ esp.id_espace }}" >Modifier la liste des outils utilisés actuellement</a></h4>
+<br />
+{% for outil_uti in outils_uti %} {% if forloop.counter == 4 or forloop.counter == 7 or forloop.counter == 11 %}  {% endif %} 
 {% for attr in outil_uti %}
-{% if forloop.counter == 1 %} <h3>{{ attr }}</h3> {% endif %}
-{% if forloop.counter == 2 %} <h4>Catégorie: {{ attr }}</h4> {% endif %}
-{% if forloop.counter == 3 %} <h4>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h4> {% endif %}
-{% endfor %} {% endfor %} </td> </tr>
-
-<tr><td><h2>Vos outils recommandés:</h2></td>
-{% for outil_rec in outils_rec %}<td>
+{% if forloop.counter == 1 %} <h4>{{ attr }}</h4> {% endif %}
+{% if forloop.counter == 2 %} <h5>Catégorie: {{ attr }}</h5> {% endif %}
+{% if forloop.counter == 3 %} <h5>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h5> {% endif %}
+{% endfor %} {% endfor %}  
+<br />
+<h2><u>Vos outils recommandés:</u></h2>
+{% for outil_rec in outils_rec %} {% if forloop.counter == 4 or forloop.counter == 8 or forloop.counter == 12 %}  {% endif %} 
 {% for attr in outil_rec %}
-{% if forloop.counter == 1 %} <h3>{{ attr }}</h3> {% endif %}
-{% if forloop.counter == 2 %} <h4>Catégorie: {{ attr }}</h4> {% endif %}
-{% if forloop.counter == 3 %} <h4>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li> {% endfor %}</h4> {% endif %}
-{% endfor %} {% endfor %} </td></tr></table>
-
-<h2>Comparaison des fonctionnalités:</h2>
+{% if forloop.counter == 1 %} <h4>{{ attr }}</h4> {% endif %}
+{% if forloop.counter == 2 %} <h5>Catégorie: {{ attr }}</h5> {% endif %}
+{% if forloop.counter == 3 %} <h5>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h5> {% endif %}
+{% endfor %} {% endfor %}  
+<br />
+<h2><u>Comparaison des fonctionnalités:</h2>
+<p>Indiquer les fonctionnalités présentes dans une liste et pas l'autre?</p>
 
 {% endblock %}
