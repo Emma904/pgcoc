@@ -149,8 +149,9 @@ def espace_detail_view(request,id_esp):
     
     esp = Espace.objects.get(id_espace = id_esp)
     ag = Agenda.objects.get(id_espace = id_esp)
+    uti = Utilisateur.objects.filter(ids_espaces__icontains = esp.id_espace).first()
 
-    context = { 'esp': esp,  'ag': ag }
+    context = { 'esp': esp,  'ag': ag, 'uti': uti }
     return render(request, 'espace_detail.html', context)
 
 
