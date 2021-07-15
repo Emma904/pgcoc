@@ -214,7 +214,7 @@ def comparaison_outils_view(request, id_esp):
             foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
             liste_finale_rec.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
     
-    context = { 'outils_uti': liste_finale_uti, 'outils_rec': liste_finale_rec }
+    context = { 'outils_uti': liste_finale_uti, 'outils_rec': liste_finale_rec, 'esp': esp }
     return render(request, 'comparaison_outils.html', context)
 
 
