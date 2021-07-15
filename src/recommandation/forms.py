@@ -41,3 +41,7 @@ class OutilsUtiForm(forms.Form):
 
     CHOICES = tuple(l_choices)
     Outils_utilisés = forms.MultipleChoiceField(required=False, choices=CHOICES, widget=forms.CheckboxSelectMultiple)
+
+
+class LoginForm(forms.Form):
+    IDEP = forms.CharField(max_length=100)

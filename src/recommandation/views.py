@@ -2,13 +2,26 @@ from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from .models import Espace, Agenda, Utilisateur, Outil
-from .forms import ActsPonctForm, NomEspaceForm, AgendaForm, OutilsUtiForm
+from .forms import ActsPonctForm, NomEspaceForm, AgendaForm, OutilsUtiForm, LoginForm
 # Create your views here.
 
-def login_view(request):
+def login_view(request): #pas une vraie authentification, voir si il faut changer ça
+    
+    if request.method == 'POST':
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                idep = login_form.cleaned_data['IDEP']
+                uti_bdd = list(Utilisateur.objects.filter(id=idep))
+                print(uti_bdd)
+                if uti_bdd == []:
+                    u = Utilisateur(id=idep)
+                    u.save()
+                return redirect('Accueil utilisateur', id=idep)      
 
-    pass #faire soit un faux login qui crée juste l'id dans la bdd si inexistant et sinon faire vrais register et login
+    else:
+        login_form = LoginForm() 
 
+    return render(request, 'login.html', { 'login_form': login_form })
 
 
 def accueil_uti_view(request, id):

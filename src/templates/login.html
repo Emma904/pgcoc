@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Login page</h2>
-<form method='POST' action="">  {% csrf_token %}
-    <input type="text" name="id" placeholder="Votre identifiant insee">
+<h3>Connexion</h3> <br />
+<form method='POST' action='.'>  {% csrf_token %}
+    <h5>Rentrez votre identifiant:</h5> <br />
+    {{ login_form.as_p }}
     <input type='submit' value='se connecter'>
 </form>
 {% endblock %}
