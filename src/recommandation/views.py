@@ -1,10 +1,13 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
-from .models import Espace, Agenda, Utilisateur, Outil
+from .models import Espace, Agenda, Utilisateur, Outil, Activite, Fonctionnalitebesoin
 from .forms import ActsPonctForm, NomEspaceForm, AgendaForm, OutilsUtiForm, LoginForm
 # Create your views here.
 
+
+
+#LOGIN
 def login_view(request): #pas une vraie authentification, voir si il faut changer ça
     
     if request.method == 'POST':
@@ -24,6 +27,8 @@ def login_view(request): #pas une vraie authentification, voir si il faut change
     return render(request, 'login.html', { 'login_form': login_form })
 
 
+
+#ACCUEIL UTILISATEUR
 def accueil_uti_view(request, id):
     
     utilisateur = Utilisateur.objects.get(id=id)
@@ -38,6 +43,7 @@ def accueil_uti_view(request, id):
 
 
 
+#CREATION ESPACE
 def espace_create_view(request, id):
 
     if request.method == 'POST':
@@ -73,7 +79,7 @@ def espace_create_view(request, id):
                         acts_ponct = acts_ponct_form.cleaned_data['Activités_ponctuelles']
                         instance_esp.acts_ponct = acts_ponct
                         instance_esp.save()
-                        return redirect('Détail espace', id_esp = instance_esp.id_espace)
+                        return redirect('Recommandation', id_esp = instance_esp.id_espace)
                         
     else:
         nom_espace_form = NomEspaceForm()    
@@ -85,6 +91,7 @@ def espace_create_view(request, id):
 
 
 
+#MODIFICATION ESPACE
 def espace_edit_view(request, id_esp):
 
     instance_esp = get_object_or_404(Espace, id_espace = id_esp)
@@ -142,6 +149,7 @@ def espace_edit_view(request, id_esp):
 
 
 
+#SUPRESSION ESPACE
 def espace_delete_view(request, id_esp):
 
     esp = get_object_or_404(Espace, id_espace = id_esp) 
@@ -158,6 +166,7 @@ def espace_delete_view(request, id_esp):
 
 
 
+#ACCUEIL ESPACE
 def espace_detail_view(request,id_esp):
     
     esp = Espace.objects.get(id_espace = id_esp)
@@ -169,6 +178,72 @@ def espace_detail_view(request,id_esp):
 
 
 
+#RECOMMANDATION OUTILS
+def recommendation_outils_views(request, id_esp):
+
+    esp = Espace.objects.get(id_espace=id_esp)
+    ag = Agenda.objects.get(id_espace=id_esp)
+
+    acts = []
+    l = ['lundi_matin', 'lundi_aprem', 'mardi_matin', 'mardi_aprem','mercredi_matin', 'mercredi_aprem',
+    'jeudi_matin', 'jeudi_aprem','vendredi_matin', 'vendredi_aprem']
+    for demij in l:
+        for act in getattr(ag, demij):
+            if not act in acts:
+                acts.append(act)
+    acts_pct = getattr(esp, 'acts_ponct')
+    for act_pct in acts_pct:
+        if act_pct in acts:
+            acts_pct.remove(act_pct)
+    
+    #activités -> besoin
+    activites_obj = Activite.objects.filter(activite__in = acts)
+    besoins_doublons = list(map(lambda x: x.besoins, activites_obj))
+    besoins = list(dict.fromkeys(besoins_doublons))
+
+    activites_ponct_obj = Activite.objects.filter(activite__in = acts_pct)
+    besoins_pct_doublons = list(map(lambda x: x.besoins, activites_ponct_obj))
+    besoins_pct = list(dict.fromkeys(besoins_pct_doublons))
+    for bes_pct in besoins_pct:
+        if bes_pct in besoins:
+            besoins_pct.remove(bes_pct)
+    
+    #besoins -> fonctionnalités
+    foncsbes = Fonctionnalitebesoin.objects.filter(besoin__in = besoins)
+    foncs_doublons = list(map(lambda x: x.fonctionnalite, foncsbes))
+    foncs = list(dict.fromkeys(foncs_doublons))
+
+    foncsbes_pct = Fonctionnalitebesoin.objects.filter(besoin__in = besoins_pct)
+    foncs_pct_doublons = list(map(lambda x: x.fonctionnalite, foncsbes_pct))
+    foncs_pct = list(dict.fromkeys(foncs_pct_doublons))
+    for fonc_pct in foncs_pct:
+        if fonc_pct in foncs:
+            foncs_pct.remove(fonc_pct)
+    
+    #fonctionnalités -> outils
+    outils_obj1 = Outil.objects.filter(categorie__in = foncs)
+    outils_obj2 = Outil.objects.filter(fonctionnalites__in = foncs)
+    outils_doublons = list(map(lambda x: x.outil, outils_obj1)) + list(map(lambda x: x.outil, outils_obj2))
+    outils = list(dict.fromkeys(outils_doublons))
+    
+    outils_pct_obj1 = Outil.objects.filter(categorie__in = foncs_pct)
+    outils_pct_obj2 = Outil.objects.filter(fonctionnalites__in = foncs_pct)
+    outils_pct_doublons = list(map(lambda x: x.outil, outils_pct_obj1)) + list(map(lambda x: x.outil, outils_pct_obj2))
+    outils_pct = list(dict.fromkeys(outils_pct_doublons))
+    for outil_pct in outils_pct:
+        if outil_pct in outils:
+            outils_pct.remove(outil_pct)
+    print(outils, outils_pct)
+
+    esp.outils_recommandés = outils + outils_pct
+    esp.save()
+
+    context = { 'outils': outils, 'outils_pct': outils_pct, 'esp': esp}
+    return render(request, 'recommandation_outils.html', context)
+
+
+
+#SELECTION OUTILS UTILISES
 def selection_outils_view(request, id_esp):
     
     e = Espace.objects.get(id_espace=id_esp)
@@ -188,6 +263,7 @@ def selection_outils_view(request, id_esp):
 
 
 
+#COMPARAISON OUTILS
 def comparaison_outils_view(request, id_esp):
 
     esp = Espace.objects.get(id_espace=id_esp)

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block titre %}
+<title>Recommandation</title>
+{% endblock %}
+
+{% block content %}
+<h3>Recommandation:</h3> <br />
+<h5>Outils recommandés pour vos activités quotidiennes</h5> </br>
+{% for outil in outils %} 
+<li>{{ outil }}</li> </br>
+{% endfor %}
+</br><br />
+<h5>Outils recommandés pour vos activités ponctuelles</h5>  </br>
+{% for outil in outils_pct %} 
+<li>{{ outil }}</li>  </br>
+{% endfor %}
+<br />
+<h4><a href='/espace/{{ esp.id_espace }}/'>Revenir à l'espace</a> </br> </h4>
+{% endblock %}

@@ -33,7 +33,7 @@ class Agenda(models.Model):
 
 class Activite(models.Model):
     id = models.BigAutoField(primary_key=True)
-    activite = models.TextField(unique=True)
+    activite = models.TextField()
     besoins = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -53,7 +53,7 @@ class Fonctionnalitebesoin(models.Model):
 
 class Outil(models.Model):
     id = models.BigAutoField(primary_key=True)
-    outil = models.TextField(unique=True)
+    outil = models.TextField()
     categorie = models.TextField()
     fonctionnalites = models.TextField(blank=True, null=True)
 
