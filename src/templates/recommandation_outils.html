@@ -6,12 +6,10 @@
 
 {% block content %}
 <h3>Recommandation:</h3> <br />
-<h5>Outils recommandés pour vos activités quotidiennes</h5> </br>
+<h5>Outils recommandés pour vos activités</h5> </br>
 {% for outil in outils %} 
 <li>{{ outil }}</li> </br>
 {% endfor %}
-</br><br />
-<h5>Outils recommandés pour vos activités ponctuelles</h5>  </br>
 {% for outil in outils_pct %} 
 <li>{{ outil }}</li>  </br>
 {% endfor %}

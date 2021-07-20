@@ -8,10 +8,12 @@
 <br />
 <h2><u>Votre espace: {{ esp.nom_espace }}</u></h2>
 <br />
-<a href="/espace_edit/{{ esp.id_espace }}" >Modifier l'espace de travail</a> </br>
+<a href="/choix_edit/{{ esp.id_espace }}" >Modifier l'espace de travail</a> </br>
 <br />
 <a href="/delete/{{ esp.id_espace}}" >Supprimer l'espace de travail</a> </br>
 <br />
+
+{% if ag_bool %}
 <h3><u>Votre semaine type:</u></h3>
     <br />
 <h5><li> Lundi matin:</li></h5> {% for act in ag.lundi_matin %}
@@ -35,12 +37,24 @@
 <h5><li> Vendredi après-midi:</li></h5>  {% for act in ag.vendredi_aprem %} 
 <p>- {{ act }}</p> {% endfor %} 
 <br />
+
  <h3><u>Vos activités ponctuelles:</u></h3>
 <br />
 {% for act_ponct in esp.acts_ponct %}
 <li>{{ act_ponct }}</li>
 {% endfor %}
 <br />
+
+{% else %}
+
+<h3><u>Vos activités:</u></h3>
+<br />
+{% for act_ponct in esp.acts_ponct %}
+<li>{{ act_ponct }}</li>
+{% endfor %}
+<br />
+{% endif %}
+
 <br />
 <h3><a href='/accueil/{{ uti.id }}/'>Revenir à la page d'accueil</a> </br>
 <br />

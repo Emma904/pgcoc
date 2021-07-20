@@ -43,14 +43,52 @@ def accueil_uti_view(request, id):
 
 
 
-#CREATION ESPACE
+#CHOIX TYPE CREATION ESPACE
+def choix_ini_view(request, id):
+    utilisateur = Utilisateur.objects.get(id=id)   
+
+    return render(request, 'choix.html', {'uti': utilisateur })  
+
+
+
+#CREATION ESPACE SIMPLE
+def espace_create_bis_view(request, id):
+    
+    if request.method == 'POST':
+        nom_espace_form = NomEspaceForm(request.POST)
+        if nom_espace_form.is_valid():
+                nom_espace = nom_espace_form.cleaned_data['Nom_de_l_espace']
+                a = Agenda(lundi_matin=[], lundi_aprem=[], mardi_matin=[], mardi_aprem=[], mercredi_matin=[], 
+                mercredi_aprem=[], jeudi_matin=[], jeudi_aprem=[], vendredi_matin=[], vendredi_aprem=[])
+                acts_ponct_form = ActsPonctForm(request.POST)
+                if acts_ponct_form.is_valid():
+                    acts_pct = acts_ponct_form.cleaned_data['Activités_ponctuelles']
+
+                    e = Espace(nom_espace=nom_espace, acts_ponct = acts_pct)
+                    e.save()
+                    a.save()
+                    uti = Utilisateur.objects.get(id=id)
+                    uti.ids_espaces.append(e.id_espace)
+                    uti.save()
+
+                    return redirect('Recommandation', id_esp = e.id_espace)
+                        
+    else:
+        nom_espace_form = NomEspaceForm()    
+        acts_ponct_form = ActsPonctForm()
+    
+    context = { 'nom_espace_form': nom_espace_form, 'acts_ponct_form': acts_ponct_form}
+    return render(request, 'create_simple.html', context)
+
+
+
+#CREATION ESPACE AGENDA
 def espace_create_view(request, id):
 
     if request.method == 'POST':
             nom_espace_form = NomEspaceForm(request.POST)
             if nom_espace_form.is_valid():
                 nom_espace = nom_espace_form.cleaned_data['Nom_de_l_espace']
-                e = Espace(nom_espace=nom_espace)
 
                 agenda_form = AgendaForm(request.POST)
                 if agenda_form.is_valid():
@@ -67,19 +105,19 @@ def espace_create_view(request, id):
                     a = Agenda(lundi_matin=lundi_matin, lundi_aprem=lundi_aprem, mardi_matin=mardi_matin, mardi_aprem=mardi_aprem,
                     mercredi_matin=mercredi_matin, mercredi_aprem=mercredi_aprem, jeudi_matin=jeudi_matin, jeudi_aprem=jeudi_aprem,
                     vendredi_matin=vendredi_matin, vendredi_aprem=vendredi_aprem)
-                    e.save()
-                    a.save()
-                    uti = Utilisateur.objects.get(id=id)
-                    uti.ids_espaces.append(e.id_espace)
-                    uti.save()
-
-                    instance_esp = get_object_or_404(Espace, id_espace = e.id_espace)
+                    
                     acts_ponct_form = ActsPonctForm(request.POST)
                     if acts_ponct_form.is_valid():
-                        acts_ponct = acts_ponct_form.cleaned_data['Activités_ponctuelles']
-                        instance_esp.acts_ponct = acts_ponct
-                        instance_esp.save()
-                        return redirect('Recommandation', id_esp = instance_esp.id_espace)
+                        acts_pct = acts_ponct_form.cleaned_data['Activités_ponctuelles']
+
+                        e = Espace(nom_espace=nom_espace, acts_ponct = acts_pct)
+                        e.save()
+                        a.save()
+                        uti = Utilisateur.objects.get(id=id)
+                        uti.ids_espaces.append(e.id_espace)
+                        uti.save()
+
+                        return redirect('Recommandation', id_esp = e.id_espace)
                         
     else:
         nom_espace_form = NomEspaceForm()    
@@ -90,8 +128,55 @@ def espace_create_view(request, id):
     return render(request, 'espace_create.html', context)
 
 
+#CHOIX MODIF ESPACE
+def choix_edit_view(request, id_esp):  
 
-#MODIFICATION ESPACE
+    return render(request, 'choix_edit.html', {'id_esp': id_esp})  
+
+
+#MODIFICATION ESPACE SIMPLE
+def espace_edit_bis_view(request, id_esp):
+
+    instance_esp = get_object_or_404(Espace, id_espace = id_esp)
+    instance_ag = get_object_or_404(Agenda, id_espace = id_esp)
+    
+    if request.method == 'POST':
+        nom_espace_form = NomEspaceForm(request.POST)
+        if nom_espace_form.is_valid():
+            nom_espace = nom_espace_form.cleaned_data['Nom_de_l_espace']
+            instance_esp.nom_espace = nom_espace
+
+            instance_ag.lundi_matin=[]
+            instance_ag.lundi_aprem=[]
+            instance_ag.mardi_matin=[]
+            instance_ag.mardi_aprem=[]
+            instance_ag.mercredi_matin=[]
+            instance_ag.mercredi_aprem=[]
+            instance_ag.jeudi_matin=[]
+            instance_ag.jeudi_aprem=[]
+            instance_ag.vendredi_matin=[]
+            instance_ag.vendredi_aprem=[]
+            
+            acts_ponct_form = ActsPonctForm(request.POST)
+            if acts_ponct_form.is_valid():
+                acts_ponct = acts_ponct_form.cleaned_data['Activités_ponctuelles']
+                instance_esp.acts_ponct = acts_ponct
+                instance_esp.save()
+                instance_ag.save()
+                print(instance_esp.acts_ponct)
+                return redirect('Recommandation', id_esp = instance_esp.id_espace)
+            
+    else:
+          nom_espace_form = NomEspaceForm(initial={'Nom_de_l_espace': instance_esp.nom_espace})    
+          
+          acts_ponct_form = ActsPonctForm(initial={'Activités_ponctuelles': instance_esp.acts_ponct})
+
+    context = { 'nom_espace_form': nom_espace_form, 'acts_ponct_form': acts_ponct_form}
+    return render(request, 'edit_simple.html', context)
+
+
+
+#MODIFICATION ESPACE AGENDA
 def espace_edit_view(request, id_esp):
 
     instance_esp = get_object_or_404(Espace, id_espace = id_esp)
@@ -133,7 +218,9 @@ def espace_edit_view(request, id_esp):
                     instance_esp.acts_ponct = acts_ponct
                     instance_esp.save()
                     instance_ag.save()
-                    return redirect('Détail espace', id_esp = instance_esp.id_espace)
+                    print(instance_esp.acts_ponct)
+                    return redirect('Recommandation', id_esp = instance_esp.id_espace)
+                    
 
     else:
           nom_espace_form = NomEspaceForm(initial={'Nom_de_l_espace': instance_esp.nom_espace})    
@@ -172,8 +259,13 @@ def espace_detail_view(request,id_esp):
     esp = Espace.objects.get(id_espace = id_esp)
     ag = Agenda.objects.get(id_espace = id_esp)
     uti = Utilisateur.objects.filter(ids_espaces__icontains = esp.id_espace).first()
-
-    context = { 'esp': esp,  'ag': ag, 'uti': uti }
+    l = ['lundi_matin', 'lundi_aprem', 'mardi_matin', 'mardi_aprem','mercredi_matin', 'mercredi_aprem',
+    'jeudi_matin', 'jeudi_aprem','vendredi_matin', 'vendredi_aprem']
+    ag_bool = False
+    for dj in l:
+        if getattr(ag, dj) != []:
+            ag_bool = True
+    context = { 'esp': esp,  'ag': ag, 'uti': uti, 'ag_bool': ag_bool }
     return render(request, 'espace_detail.html', context)
 
 
@@ -191,7 +283,7 @@ def recommendation_outils_views(request, id_esp):
         for act in getattr(ag, demij):
             if not act in acts:
                 acts.append(act)
-    acts_pct = getattr(esp, 'acts_ponct')
+    acts_pct = getattr(esp, 'acts_ponct').copy()
     for act_pct in acts_pct:
         if act_pct in acts:
             acts_pct.remove(act_pct)
@@ -233,7 +325,6 @@ def recommendation_outils_views(request, id_esp):
     for outil_pct in outils_pct:
         if outil_pct in outils:
             outils_pct.remove(outil_pct)
-    print(outils, outils_pct)
 
     esp.outils_recommandés = outils + outils_pct
     esp.save()

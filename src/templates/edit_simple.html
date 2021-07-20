@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+ {% block titre %}
+<title>Modification d'espace</title>
+ {% endblock %}
+
+
+{% block content %}
+<form action = '.', method = 'POST'>{% csrf_token %}
+    <h3>Création de l'espace de travail</h3>
+    <br />
+    {{ nom_espace_form.as_p }}
+    <br />
+   
+    <h4>Activités</h4>
+    <br />
+    {{ acts_ponct_form.as_p }}
+    
+    <input type='submit' value='Enregistrer'>
+</form>
+{% endblock %}

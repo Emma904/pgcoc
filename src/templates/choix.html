@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+ {% block titre %}
+<title>Sélection initiale</title>
+ {% endblock %}
+
+
+{% block content %}
+<h3>Sélectionnez un type de création d'espace de travail</h4>  </br> <br />
+<h5><a href="/create_simple/{{ uti.id }}/" >Sélection de ses activités</a> </br> <br />
+<a href="/create/{{ uti.id }}/" >Description de sa semaine type et de ses activités ponctuelles</a> </br> </h5>
+{% endblock %}
