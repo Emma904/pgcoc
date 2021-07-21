@@ -7,11 +7,8 @@
 {% block content %}
 <h3>Recommandation:</h3> <br />
 <h5>Outils recommandés pour vos activités</h5> </br>
-{% for outil in outils %} 
+{% for outil in esp.outils_recommandés %} 
 <li>{{ outil }}</li> </br>
-{% endfor %}
-{% for outil in outils_pct %} 
-<li>{{ outil }}</li>  </br>
 {% endfor %}
 <br />
 <h4><a href='/espace/{{ esp.id_espace }}/'>Revenir à l'espace</a> </br> </h4>

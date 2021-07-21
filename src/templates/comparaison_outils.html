@@ -18,6 +18,7 @@
 {% if forloop.counter == 3 %} <h5>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h5> {% endif %}
 {% endfor %} {% endfor %}  
 <br />
+
 <h2><u>Vos outils recommandés:</u></h2>
 {% for outil_rec in outils_rec %} {% if forloop.counter == 4 or forloop.counter == 8 or forloop.counter == 12 %}  {% endif %} 
 {% for attr in outil_rec %}
@@ -26,8 +27,11 @@
 {% if forloop.counter == 3 %} <h5>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h5> {% endif %}
 {% endfor %} {% endfor %}  
 <br />
-<h2><u>Comparaison des fonctionnalités:</h2>
-<p>Indiquer les fonctionnalités présentes dans une liste et pas l'autre?</p>
+
+<h2><u>Fonctionnalités présentes dans la liste des outils recommandés mais absentes de la liste des outils utilisés:</u></h2>
+<h5>{% for f in f_manq %}
+<li>{{ f }}</li> </h5>
+{% endfor %}
 
 <br />
 <h3><a href='/espace/{{ esp.id_espace }}/'>Revenir à l'espace</a> </br>

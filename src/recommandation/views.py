@@ -311,25 +311,41 @@ def recommandation_outils_views(request, id_esp):
     for fonc_pct in foncs_pct:
         if fonc_pct in foncs:
             foncs_pct.remove(fonc_pct)
+    fonctions = foncs + foncs_pct
     
     #fonctionnalités -> outils
-    outils_obj1 = Outil.objects.filter(categorie__in = foncs)
-    outils_obj2 = Outil.objects.filter(fonctionnalites__in = foncs)
-    outils_doublons = list(map(lambda x: x.outil, outils_obj1)) + list(map(lambda x: x.outil, outils_obj2))
-    outils = list(dict.fromkeys(outils_doublons))
-    
-    outils_pct_obj1 = Outil.objects.filter(categorie__in = foncs_pct)
-    outils_pct_obj2 = Outil.objects.filter(fonctionnalites__in = foncs_pct)
-    outils_pct_doublons = list(map(lambda x: x.outil, outils_pct_obj1)) + list(map(lambda x: x.outil, outils_pct_obj2))
-    outils_pct = list(dict.fromkeys(outils_pct_doublons))
-    for outil_pct in outils_pct:
-        if outil_pct in outils:
-            outils_pct.remove(outil_pct)
+    d = {}
+    l_outils = list(dict.fromkeys(list(map(lambda x : x.outil, list(Outil.objects.all())))))
+    for nom_outil in l_outils:
+        d[nom_outil] = [getattr(Outil.objects.filter(outil=nom_outil).first(), 'categorie')]
+        d[nom_outil] += list(map(lambda x: getattr(x,'fonctionnalites'),(list(Outil.objects.filter(outil=nom_outil)))))
+    print('d',d)
 
-    esp.outils_recommandés = outils + outils_pct
+    liste_outils=[]
+    while fonctions != []:
+        out = None
+        correspondance = 0
+        d_commun = {}
+        for nom_outil in d.keys():
+            d_commun[nom_outil]=[]
+            for fonc in fonctions:
+                if fonc in d[nom_outil]:
+                    d_commun[nom_outil].append(fonc)
+            if len(d_commun[nom_outil])> correspondance:
+                correspondance = len(d_commun[nom_outil])
+                out = nom_outil
+            
+        if out is not None:
+            for fonc in d_commun[out]:
+                fonctions.remove(fonc) 
+            liste_outils.append(out)
+        else:
+            break  
+       
+    esp.outils_recommandés= liste_outils
     esp.save()
 
-    context = { 'outils': outils, 'outils_pct': outils_pct, 'esp': esp}
+    context = {'esp': esp}
     return render(request, 'recommandation_outils.html', context)
 
 
@@ -362,9 +378,48 @@ def comparaison_outils_view(request, id_esp):
 
     if outilsuti == []:
         return redirect('Sélection outils', id_esp=esp.id_espace)
-        # liste_finale_uti=[]
-        # liste_finale_rec=[]
+        
     else:
+
+        ag = Agenda.objects.get(id_espace=id_esp)
+
+        acts = []
+        l = ['lundi_matin', 'lundi_aprem', 'mardi_matin', 'mardi_aprem','mercredi_matin', 'mercredi_aprem',
+        'jeudi_matin', 'jeudi_aprem','vendredi_matin', 'vendredi_aprem']
+        for demij in l:
+            for act in getattr(ag, demij):
+                if not act in acts:
+                    acts.append(act)
+        acts_pct = getattr(esp, 'acts_ponct').copy()
+        for act_pct in acts_pct:
+            if act_pct in acts:
+                acts_pct.remove(act_pct)
+        
+        #activités -> besoin
+        activites_obj = Activite.objects.filter(activite__in = acts)
+        besoins_doublons = list(map(lambda x: x.besoins, activites_obj))
+        besoins = list(dict.fromkeys(besoins_doublons))
+
+        activites_ponct_obj = Activite.objects.filter(activite__in = acts_pct)
+        besoins_pct_doublons = list(map(lambda x: x.besoins, activites_ponct_obj))
+        besoins_pct = list(dict.fromkeys(besoins_pct_doublons))
+        for bes_pct in besoins_pct:
+            if bes_pct in besoins:
+                besoins_pct.remove(bes_pct)
+        
+        #besoins -> fonctionnalités
+        foncsbes = Fonctionnalitebesoin.objects.filter(besoin__in = besoins)
+        foncs_doublons = list(map(lambda x: x.fonctionnalite, foncsbes))
+        foncs = list(dict.fromkeys(foncs_doublons))
+
+        foncsbes_pct = Fonctionnalitebesoin.objects.filter(besoin__in = besoins_pct)
+        foncs_pct_doublons = list(map(lambda x: x.fonctionnalite, foncsbes_pct))
+        foncs_pct = list(dict.fromkeys(foncs_pct_doublons))
+        for fonc_pct in foncs_pct:
+            if fonc_pct in foncs:
+                foncs_pct.remove(fonc_pct)
+        fonctions = foncs + foncs_pct    
+
         liste_finale_uti = [] #liste de ['outil','catégorie', 'fonctionnalités']
         outilsuti = esp.outils_utilisés
         for outiluti in outilsuti:
@@ -380,8 +435,14 @@ def comparaison_outils_view(request, id_esp):
             l_nom_cat = liste_ini[0]
             foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
             liste_finale_rec.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
-    
-    context = { 'outils_uti': liste_finale_uti, 'outils_rec': liste_finale_rec, 'esp': esp }
+        foncs_manquantes = []
+        for fonc in fonctions:
+            for outilrec in liste_finale_rec:
+                for outiluti in liste_finale_uti:
+                    if (outilrec[1] == fonc or fonc in outilrec[2]) and (outiluti[1]!=fonc and fonc not in outiluti[2]):
+                        foncs_manquantes.append(fonc)
+
+    context = { 'outils_uti': liste_finale_uti, 'outils_rec': liste_finale_rec, 'esp': esp, 'f_manq': foncs_manquantes }
     return render(request, 'comparaison_outils.html', context)
 
 
