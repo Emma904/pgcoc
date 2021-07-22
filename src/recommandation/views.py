@@ -2,7 +2,7 @@ from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from .models import Espace, Agenda, Utilisateur, Outil, Activite, Fonctionnalitebesoin
-from .forms import ActsPonctForm, NomEspaceForm, AgendaForm, OutilsUtiForm, LoginForm
+from .forms import ActsPonctForm, NomEspaceForm, AgendaForm, OutilsUtiForm, LoginForm, DeuxOutilsForm
 # Create your views here.
 
 
@@ -446,3 +446,46 @@ def comparaison_outils_view(request, id_esp):
     return render(request, 'comparaison_outils.html', context)
 
 
+#SELECTION DE DEUX OUTILS POUR UNE SIMPLE COMPARAISON DES FONCTIONNALITES
+def selection_deux_outils_view(request):
+    
+    if request.method == 'POST':
+
+            deux_outils_form = DeuxOutilsForm(request.POST)
+            if deux_outils_form.is_valid():
+                nom_outil_1 = deux_outils_form.cleaned_data['Outil_1'][0]
+                nom_outil_2 = deux_outils_form.cleaned_data['Outil_2'][0]
+                
+                return redirect('Comparaison simple', outil1=nom_outil_1, outil2=nom_outil_2)
+    else:
+          deux_outils_form = DeuxOutilsForm()
+
+    context = { 'deux_outils_form': deux_outils_form }
+    return render(request, 'selection_deux_outils.html', context)
+
+
+#SIMPLE COMPARAISON DES FONCTIONNALITES DE DEUX OUTILS
+def comparaison_simple_view(request, outil1, outil2):
+
+    ini_1 = list(Outil.objects.filter(outil=outil1))
+    nom_cat_1 = ini_1[0]
+    foncs_1 = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, ini_1))))
+    outil_1 = [nom_cat_1.outil, nom_cat_1.categorie, foncs_1]
+
+    ini_2 = list(Outil.objects.filter(outil=outil2))
+    nom_cat_2 = ini_2[0]
+    foncs_2 = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, ini_2))))
+    outil_2 = [nom_cat_2.outil, nom_cat_2.categorie, foncs_2]
+
+    nom1, nom2 = outil_1[0], outil_2[0]
+    manq1 = []
+    for f2 in foncs_2:
+        if f2 not in foncs_1:
+            manq1.append(f2)
+    manq2 = []
+    for f1 in foncs_1:
+        if f1 not in foncs_2:
+            manq2.append(f1)
+
+    context = {'outil1': outil_1, 'outil2': outil_2, 'nom1': nom1, 'nom2': nom2, 'manq1': manq1, 'manq2': manq2}
+    return render(request, 'comparaison_simple.html', context)

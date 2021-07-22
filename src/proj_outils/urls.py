@@ -32,5 +32,6 @@ urlpatterns = [
     path('create_simple/<str:id>/', views.espace_create_bis_view, name='Création simple'),
     path('choix_edit/<int:id_esp>/', views.choix_edit_view, name='Choix modif'),
     path('espace_edit_simple/<int:id_esp>/', views.espace_edit_bis_view, name='Modification simple'),
-
+    path('selection_deux_outils/', views.selection_deux_outils_view, name='Sélection deux outils'),
+    path('comparaison_deux_outils/<str:outil1>/<str:outil2>/', views.comparaison_simple_view, name='Comparaison simple')
 ]

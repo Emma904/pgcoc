@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block titre %}
+<title>Comparaison de deux outils</title>
+{% endblock %}
+
+{% block content %}
+<h2><u>Comparaison entre {{ nom1 }} et {{ nom2 }}:</u></h2> 
+<br />
+{% for attr in outil1 %}
+{% if forloop.counter == 1 %} <h4>{{ attr }}</h4> {% endif %}
+{% if forloop.counter == 2 %} <h5>Catégorie: {{ attr }}</h5> {% endif %}
+{% if forloop.counter == 3 %} <h5>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h5> {% endif %}
+{% endfor %} 
+<br />
+{% for attr in outil2 %}
+{% if forloop.counter == 1 %} <h4>{{ attr }}</h4> {% endif %}
+{% if forloop.counter == 2 %} <h5>Catégorie: {{ attr }}</h5> {% endif %}
+{% if forloop.counter == 3 %} <h5>Fonctionnalités: {% for fonc in attr %} <li>{{ fonc }}</li>{% endfor %}</h5> {% endif %}
+{% endfor %} 
+<br />
+
+<h3><u> Fonctionnalités présentes dans {{ nom1 }} et absentes de {{ nom2 }}:</u></h3> 
+<br />
+<h5> {% for fm2 in manq2 %}
+{{ fm2 }}
+{% endfor %} </h5>
+<br />
+
+<h3><u> Fonctionnalités présentes dans {{ nom2 }} et absentes de {{ nom1 }}:</u></h3> 
+<br />
+<h5>{% for fm1 in manq1 %}
+{{ fm1 }}
+{% endfor %} </h5>
+{% endblock %}

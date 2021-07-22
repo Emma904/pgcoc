@@ -45,3 +45,13 @@ class OutilsUtiForm(forms.Form):
 
 class LoginForm(forms.Form):
     IDEP = forms.CharField(max_length=100)
+
+
+class DeuxOutilsForm(forms.Form):
+    global l_outils
+    l_outils = list(dict.fromkeys(list(map(lambda a: a.outil, Outil.objects.all()))))
+    l_choices = [(l_outils[i],l_outils[i]) for i in range(len(l_outils))]
+
+    CHOICES = tuple(l_choices)
+    Outil_1 = forms.MultipleChoiceField(required=True, choices=CHOICES, widget=forms.CheckboxSelectMultiple)
+    Outil_2 = forms.MultipleChoiceField(required=True, choices=CHOICES, widget=forms.CheckboxSelectMultiple)
