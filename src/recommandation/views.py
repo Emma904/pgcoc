@@ -319,7 +319,6 @@ def recommandation_outils_views(request, id_esp):
     for nom_outil in l_outils:
         d[nom_outil] = [getattr(Outil.objects.filter(outil=nom_outil).first(), 'categorie')]
         d[nom_outil] += list(map(lambda x: getattr(x,'fonctionnalites'),(list(Outil.objects.filter(outil=nom_outil)))))
-    print('d',d)
 
     liste_outils=[]
     while fonctions != []:
@@ -435,11 +434,25 @@ def comparaison_outils_view(request, id_esp):
             l_nom_cat = liste_ini[0]
             foncs = list(dict.fromkeys(list(map(lambda a: a.fonctionnalites, liste_ini))))
             liste_finale_rec.append([l_nom_cat.outil, l_nom_cat.categorie, foncs])
+
+        l_foncs_rec = []
+        for outil_rec in liste_finale_rec:
+            if outil_rec[1] not in l_foncs_rec:
+                l_foncs_rec.append(outil_rec[1])
+            for fonc in outil_rec[2]:
+                if fonc not in l_foncs_rec:
+                    l_foncs_rec.append(fonc)
+        l_foncs_uti = []
+        for outil_uti in liste_finale_uti:
+            if outil_uti[1] not in l_foncs_uti:
+                l_foncs_uti.append(outil_uti[1])
+            for fonc in outil_uti[2]:
+                if fonc not in l_foncs_uti:
+                    l_foncs_uti.append(fonc)
+
         foncs_manquantes = []
         for fonc in fonctions:
-            for outilrec in liste_finale_rec:
-                for outiluti in liste_finale_uti:
-                    if (outilrec[1] == fonc or fonc in outilrec[2]) and (outiluti[1]!=fonc and fonc not in outiluti[2]):
+            if  fonc in l_foncs_rec and fonc not in l_foncs_uti and fonc not in foncs_manquantes:
                         foncs_manquantes.append(fonc)
 
     context = { 'outils_uti': liste_finale_uti, 'outils_rec': liste_finale_rec, 'esp': esp, 'f_manq': foncs_manquantes }
@@ -479,11 +492,11 @@ def comparaison_simple_view(request, outil1, outil2):
 
     nom1, nom2 = outil_1[0], outil_2[0]
     manq1 = []
-    for f2 in foncs_2:
+    for f2 in [outil_2[1]] + foncs_2:
         if f2 not in foncs_1:
             manq1.append(f2)
     manq2 = []
-    for f1 in foncs_1:
+    for f1 in [outil_1[1]] + foncs_1:
         if f1 not in foncs_2:
             manq2.append(f1)
 
